@@ -87,7 +87,8 @@ downloadImages = function(srcs, next) {
   tasks = [];
   //downloader = new Downloader(Path.resolve(sourceDir, imageFolder));  
   srcs.forEach(function(src) {
-    var downloader = new Downloader(Path.dirname(src.path));
+    var path = Path.parse(src.path);
+    var downloader = new Downloader(Path.join(path.dir, path.name));
     return src.images.forEach(function(img) {
       return tasks.push(function(callback) {
         return img.download(downloader, callback);

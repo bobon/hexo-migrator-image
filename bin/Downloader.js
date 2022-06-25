@@ -45,7 +45,8 @@ module.exports = Downloader = (function() {
     var fileName, isLocal, isRemote, to, url;
     url = img.url;
     fileName = defaultFileName(url);
-    to = this.imageFolder + fileName;
+    //to = this.imageFolder + fileName;
+    to = Path.resolve(this.imageFolder, fileName);
     console.log("FILE ".blue + "GET".yellow + " %s", url);
     if (fs.existsSync(to)) {
       console.log("SKIP".green + " %s", fileName);
@@ -84,6 +85,14 @@ module.exports = Downloader = (function() {
       err = new Error("Unsupported protocol '" + protocol_name + "'");
       return typeof callback === "function" ? callback(err, fileName) : void 0;
     }
+
+    console.log("Check %s", this.imageFolder);
+    var exists = fs.existsSync(this.imageFolder);
+    if (!exists) {
+      console.log("Make %s", this.imageFolder);
+      fs.mkdirSync(this.imageFolder);
+    }
+
     return request = protocol.get(from, (function(response) {
       var msg, ws;
       if (response.statusCode === 200) {
