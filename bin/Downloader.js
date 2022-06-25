@@ -30,7 +30,8 @@ defaultFileName = function(path) {
   var digest, ext, shasum, u;
   u = Url.parse(path);
   shasum = crypto.createHash('sha1').update(u.href);
-  ext = Path.extname(u.path);
+  //ext = Path.extname(u.path);
+  ext = Path.extname(u.pathname);
   digest = shasum.digest('hex');
   return digest + ext;
 };

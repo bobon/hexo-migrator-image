@@ -32,14 +32,14 @@ colorfulLog = function(verb, count, msg) {
 };
 
 initialize = function(next) {
-  var exists, imageDir;
+  /**var exists, imageDir;
   imageDir = Path.resolve(sourceDir, imageFolder);
   colorfulLog("Check ", null, imageDir);
   exists = fs.existsSync(imageDir);
   if (!exists) {
     colorfulLog("Make ", null, imageDir);
     fs.mkdirSync(imageDir);
-  }
+  }**/
   return typeof next === "function" ? next(null, null) : void 0;
 };
 
@@ -83,10 +83,11 @@ loadSourceFile = function(files, next) {
 };
 
 downloadImages = function(srcs, next) {
-  var downloader, tasks;
+  var tasks;
   tasks = [];
-  downloader = new Downloader(Path.resolve(sourceDir, imageFolder));
+  //downloader = new Downloader(Path.resolve(sourceDir, imageFolder));  
   srcs.forEach(function(src) {
+    var downloader = new Downloader(Path.dirname(src.path));
     return src.images.forEach(function(img) {
       return tasks.push(function(callback) {
         return img.download(downloader, callback);

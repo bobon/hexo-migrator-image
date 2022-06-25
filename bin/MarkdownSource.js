@@ -89,29 +89,36 @@ module.exports = Source = (function() {
       _this = this;
     newSrc = this.src;
     _ref = this.images;
+    var modified = false;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       img = _ref[_i];
       if (img.skipped) {
         continue;
       }
       r = new RegExp(escapeRegExp(img.url, "g"));
-      newSrc = newSrc.replace(r, "/images/" + img.localPath);
+      //newSrc = newSrc.replace(r, "/images/" + img.localPath);
+      newSrc = newSrc.replace(r, img.localPath);
+      modified = true;
     }
-    d = new Date();
-    timestamp = d.toISOString().replace(/:/g, "-");
-    that = this;
-    return file.writeFile("" + this.path + "." + timestamp + ".bak", this.src, function(err) {
-      if (err != null) {
-        console.log("Fail to backup " + _this.path);
-      }
-      return file.writeFile(_this.path, newSrc, function(err) {
+    if (modified) {
+      d = new Date();
+      timestamp = d.toISOString().replace(/:/g, "-");
+      that = this;
+      return file.writeFile("" + this.path + "." + timestamp + ".bak", this.src, function(err) {
         if (err != null) {
-          return typeof callback === "function" ? callback(err, that) : void 0;
+          console.log("Fail to backup " + _this.path);
         } else {
-          return typeof callback === "function" ? callback(null, that) : void 0;
+          console.log("Success to backup " + _this.path);
         }
+        return file.writeFile(_this.path, newSrc, function(err) {
+          if (err != null) {
+            return typeof callback === "function" ? callback(err, that) : void 0;
+          } else {
+            return typeof callback === "function" ? callback(null, that) : void 0;
+          }
+        });
       });
-    });
+    }
   };
 
   return Source;
